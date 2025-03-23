@@ -32,5 +32,5 @@ runs:
         repository: 'diogot/ReleaseCheck'
         fetch-depth: 2
     - name: 'Check Versions'
-        run: cd recheck && swift run recheck -a ${{ inputs.apple-id }} -p ${{ inputs.platform }} -t ${{ inputs.slack-bot-token }} -c ${{ inputs.slack-channel }} ${{ inputs.versbose && '-v' || ''  }}
+      run: cd recheck && swift run recheck -a ${{ inputs.apple-id }} -p ${{ inputs.platform }} -t ${{ inputs.slack-bot-token }} -c ${{ inputs.slack-channel }} ${{ inputs.versbose == true && '-v' || ' ' }}
       shell: bash
