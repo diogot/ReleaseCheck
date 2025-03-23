@@ -31,8 +31,8 @@ class Checker {
         self.verbose = verbose
     }
 
-    func pubishRelease(of appId: String, on platform: Platform) async throws {
-        print("Publishig release for \(appId) on \(platform)...")
+    func publishRelease(of appId: String, on platform: Platform) async throws {
+        print("Publishing release for \(appId) on \(platform)...")
         let release = try await tunes.fetchCurrentRelease(appId: appId, platform: platform)
         let existentMessage = try await slack.searchMessage(with: release.messageId, inChannel: channelId, fromUser: userId)
 

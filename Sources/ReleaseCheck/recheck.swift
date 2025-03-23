@@ -30,7 +30,7 @@ struct recheck: AsyncParsableCommand {
         let checker = try await Checker(slackToken: slackToken, channelName: slackChannelName, verbose: verbose)
 
         for platform in platforms {
-            try await checker.pubishRelease(of: appId, on: platform)
+            try await checker.publishRelease(of: appId, on: platform)
         }
     }
 }

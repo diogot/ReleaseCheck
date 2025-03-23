@@ -25,13 +25,13 @@ public struct StoreRelease: Decodable {
     }
 
     public init(from decoder: any Decoder) throws {
-        let containter = try decoder.container(keyedBy: CodingKeys.self)
-        name = try containter.decode(String.self, forKey: .name)
-        version = try containter.decode(String.self, forKey: .version)
-        date = try containter.decode(Date.self, forKey: .date)
-        releaseNotes = try containter.decode(String.self, forKey: .releaseNotes)
-        storeURL = try containter.decode(URL.self, forKey: .storeURL)
-        let supportedDevices = try containter.decode([String].self, forKey: .supportedDevices)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        version = try container.decode(String.self, forKey: .version)
+        date = try container.decode(Date.self, forKey: .date)
+        releaseNotes = try container.decode(String.self, forKey: .releaseNotes)
+        storeURL = try container.decode(URL.self, forKey: .storeURL)
+        let supportedDevices = try container.decode([String].self, forKey: .supportedDevices)
         if supportedDevices.contains(where: { $0.hasPrefix("AppleTV") }) {
             platform = .tvOS
         } else if supportedDevices.contains(where: { $0.hasPrefix("iPhone") }) {

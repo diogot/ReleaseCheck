@@ -17,7 +17,7 @@ inputs:
   slack-bot-token:
     description: 'Token of the Slack bot that will be used to post'
     required: true
-  versbose:
+  verbose:
     description: 'If true it logs more information, deafult is false'
     required: false
     default: false
@@ -32,5 +32,5 @@ runs:
         repository: 'diogot/ReleaseCheck'
         fetch-depth: 2
     - name: 'Check Versions'
-      run: cd recheck && swift run recheck -a ${{ inputs.apple-id }} -p ${{ inputs.platforms }} -t ${{ inputs.slack-bot-token }} -c ${{ inputs.slack-channel }} ${{ inputs.versbose == true && '-v' || ' ' }}
+      run: cd recheck && swift run recheck -a ${{ inputs.apple-id }} -p ${{ inputs.platforms }} -t ${{ inputs.slack-bot-token }} -c ${{ inputs.slack-channel }} ${{ inputs.verbose == true && '-v' || ' ' }}
       shell: bash

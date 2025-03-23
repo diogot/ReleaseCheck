@@ -32,7 +32,7 @@ public class TunesAPI {
 
     public func fetchCurrentRelease(appId id: String, platform: Platform) async throws -> StoreRelease {
         if verbose {
-            print("Fechting current release for appId \(id) in \(platform) platform...")
+            print("Fetching current release for appId \(id) in \(platform) platform...")
         }
         let response: LookupResponse = try await client.request(
             baseURL: "https://itunes.apple.com/lookup",
