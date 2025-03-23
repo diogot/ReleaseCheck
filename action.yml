@@ -8,7 +8,7 @@ inputs:
   apple-id:
     description: 'Apple ID of the app'
     required: true
-  platform:
+  platforms:
     description: 'Platforms to be checked, iOS and tvOS are supported'
     required: true
   slack-channel:
@@ -32,5 +32,5 @@ runs:
         repository: 'diogot/ReleaseCheck'
         fetch-depth: 2
     - name: 'Check Versions'
-      run: cd recheck && swift run recheck -a ${{ inputs.apple-id }} -p ${{ inputs.platform }} -t ${{ inputs.slack-bot-token }} -c ${{ inputs.slack-channel }} ${{ inputs.versbose == true && '-v' || ' ' }}
+      run: cd recheck && swift run recheck -a ${{ inputs.apple-id }} -p ${{ inputs.platforms }} -t ${{ inputs.slack-bot-token }} -c ${{ inputs.slack-channel }} ${{ inputs.versbose == true && '-v' || ' ' }}
       shell: bash
