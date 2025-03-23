@@ -31,3 +31,32 @@ A public existent channel where the bot has already joined
 ```
 swift run recheck -a <app id> -p ios -t <slack bot token> -c <slack channel name>
 ```
+
+# GitHub Action
+
+This repository also provides a [GitHub Action](https://github.com/diogot/ReleaseCheck/blob/main/action.yml). This action requires a macOS host.
+Here is a sample workflow that offers a manual trigger and automatically checks hourly:
+
+```YAML
+name: 'Publish Released to Slack'
+
+on:
+  schedule:
+    - cron: '42 * * * *' # every hour at 42 minutes
+  workflow_dispatch:
+
+jobs:
+  recheck:
+    name: 'Release Check'
+    runs-on: [macos-latest]
+
+    steps:
+      - name: ReleaseCheck
+        uses: diogot/ReleaseCheck@1.0 # Check the latest release available
+        with:
+          apple-id: ${{ vars.APPLE_ID }}
+          platforms: 'iOS tvOS'
+          slack-channel: ${{ vars.SLACK_CHANNEL }}
+          slack-bot-token: ${{ secrets.SLACK_TOKEN }}
+          verbose: true
+```
