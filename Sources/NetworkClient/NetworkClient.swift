@@ -12,15 +12,18 @@ public class NetworkClient {
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
 
+    public var verbose: Bool
+
     public enum Method: String {
         case get = "GET"
         case post = "POST"
     }
 
-    public init(session: URLSession = .shared, encoder: JSONEncoder = .init(), decoder: JSONDecoder = .init()) {
+    public init(session: URLSession = .shared, encoder: JSONEncoder = .init(), decoder: JSONDecoder = .init(), verbose: Bool = false) {
         self.session = session
         self.encoder = encoder
         self.decoder = decoder
+        self.verbose = verbose
     }
 
     public func request<T: Decodable>(
@@ -65,16 +68,20 @@ public class NetworkClient {
 
         let (data, result) = try await session.data(for: request)
         if let result = result as? HTTPURLResponse {
-            print("\(method) \(url): \(result.statusCode)")
+            if verbose {
+                print("\(method) \(url): \(result.statusCode)")
+            }
         }
 
         do {
             let response = try decoder.decode(T.self, from: data)
             return response
         } catch {
-            print("")
-            print(String(data: data, encoding: .utf8) ?? "No data")
-            print("")
+            if verbose {
+                print("")
+                print(String(data: data, encoding: .utf8) ?? "No data")
+                print("")
+            }
             throw error
         }
     }

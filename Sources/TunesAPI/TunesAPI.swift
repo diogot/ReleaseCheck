@@ -11,17 +11,29 @@ import NetworkClient
 public class TunesAPI {
     private let client: NetworkClient
 
-    public init() {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        self.client = NetworkClient(decoder: decoder)
+    public var verbose: Bool {
+        didSet {
+            client.verbose = verbose
+        }
     }
 
-    public init(client: NetworkClient) {
+    public init(verbose: Bool = false) {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        self.client = NetworkClient(decoder: decoder, verbose: verbose)
+        self.verbose = verbose
+    }
+
+    public init(client: NetworkClient, verbose: Bool = false) {
+        client.verbose = verbose
         self.client = client
+        self.verbose = verbose
     }
 
     public func fetchCurrentRelease(appId id: String, platform: Platform) async throws -> StoreRelease {
+        if verbose {
+            print("Fechting current release for appId \(id) in \(platform) platform...")
+        }
         let response: LookupResponse = try await client.request(
             baseURL: "https://itunes.apple.com/lookup",
             parameters: [

@@ -12,9 +12,17 @@ public class SlackAPI {
     private let token: String
     private let client: NetworkClient
 
-    public init(token: String, client: NetworkClient = .init()) {
+    public var verbose: Bool {
+        didSet {
+            client.verbose = verbose
+        }
+    }
+
+    public init(token: String, client: NetworkClient = .init(), verbose: Bool = false) {
+        client.verbose = verbose
         self.token = token
         self.client = client
+        self.verbose = verbose
     }
 
     public func post(toChannelWithName channelName: String, _ text: String) async throws {
@@ -22,6 +30,9 @@ public class SlackAPI {
     }
 
     public func channel(withName name: String) async throws -> Channel {
+        if verbose {
+            print("Fetching channel named \(name)...")
+        }
         let channels = try await listAllChannels()
         guard let channel = channels.first(where: { $0.name == name }) else {
             throw SlackResponsesError.channelNotFound(name)
@@ -57,6 +68,9 @@ public class SlackAPI {
     }
 
     public func postMessage(toChannelWithId channelId: String, _ text: String) async throws {
+        if verbose {
+            print("Posting release message to channel \(channelId)...")
+        }
         let _: EmptyResponse = try await client.request(
             baseURL: "https://slack.com/api/chat.postMessage",
             method: .post,
@@ -69,7 +83,9 @@ public class SlackAPI {
         var message: Message?
         var cursor: String?
 
-        print("Searching for \"\(text)\" of user \(userId ?? "<any>") in channel \(channelId)...")
+        if verbose {
+            print("Searching for \"\(text)\" of user \(userId ?? "<any>") in channel \(channelId)...")
+        }
         repeat {
             let response = try await conversationsHistory(channelId: channelId, cursor: cursor)
             message = response.messages.first(where: { message in
@@ -88,8 +104,9 @@ public class SlackAPI {
     }
 
     public func searchMessages(with text: String?, inChannel channelId: String, fromUser userId: String?) async throws -> [Message] {
-        print("Searching for messages in channel \(channelId) with text \"\(text ?? "<any>")\" of user \(userId ?? "<any>") ")
-
+        if verbose {
+            print("Searching for messages in channel \(channelId) with text \"\(text ?? "<any>")\" of user \(userId ?? "<any>")...")
+        }
         var messages: [Message] = []
         var cursor: String?
 
@@ -113,6 +130,9 @@ public class SlackAPI {
     }
 
     public func deleteMessage(_ messageId: String, inChannel channelId: String) async throws {
+        if verbose {
+            print("Deleting message \(messageId) in channel \(channelId)...")
+        }
         let _: EmptyResponse = try await client.request(
             baseURL: "https://slack.com/api/chat.delete",
             method: .post,
@@ -135,6 +155,9 @@ public class SlackAPI {
     }
 
     public func whoAmI() async throws -> User {
+        if verbose {
+            print("Fetching current user information...")
+        }
         return try await client.request(
             baseURL: "https://slack.com/api/auth.test",
             method: .post,
@@ -147,17 +170,17 @@ public class SlackAPI {
     }
 }
 
-public struct MessageData: Encodable {
-    public let channel: String
-    public let text: String
+private struct MessageData: Encodable {
+    let channel: String
+    let text: String
 
-    public enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case channel
         case text = "markdown_text"
     }
 }
 
-struct DeleteData: Encodable {
+private struct DeleteData: Encodable {
     let channel: String
     let ts: String
 }

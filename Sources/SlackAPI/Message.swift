@@ -8,10 +8,10 @@
 import Foundation
 
 public struct Message: Decodable {
-    let ts: String
-    let user: String
-    let text: String
-    let type: String
+    public let ts: String
+    public let user: String
+    public let text: String
+    public let type: String
 
     enum CodingKeys: String, CodingKey {
         case ts
