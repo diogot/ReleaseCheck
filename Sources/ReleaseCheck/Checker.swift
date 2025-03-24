@@ -58,4 +58,9 @@ class Checker {
         }
         print("All messages deleted!")
     }
+
+    func printRelease(of appId: String, on platform: Platform) async throws {
+        let release = try await tunes.fetchCurrentRelease(appId: appId, platform: platform)
+        print(release.slackMessage)
+    }
 }

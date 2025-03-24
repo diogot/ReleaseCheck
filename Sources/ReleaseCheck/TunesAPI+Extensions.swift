@@ -14,8 +14,8 @@ extension StoreRelease {
         """
         **New release available for "\(name)" on \(platform.slackString)**
         
-        Version: **\(version)**
-        Release date: **\(
+        **Version:** \(version)
+        **Release Date:** \(
         date.formatted(
         .dateTime
         .weekday()
@@ -26,9 +26,8 @@ extension StoreRelease {
         .minute()
         .timeZone()
         .locale(.init(identifier: "en_us"))
-        ))**
-        Store link: "\(storeURL)"
-        Release Notes:
+        ))
+        **Release Notes:**
         
         \(releaseNotes)
         
