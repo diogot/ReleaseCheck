@@ -79,7 +79,12 @@ public class SlackAPI {
         )
     }
 
-    public func searchMessage(with text: String, inChannel channelId: String, fromUser userId: String?) async throws -> Message? {
+    public func searchMessage(
+        with text: String,
+        inChannel channelId: String,
+        fromUser userId: String?,
+        after date: Date?
+    ) async throws -> Message? {
         var message: Message?
         var cursor: String?
 
@@ -87,7 +92,11 @@ public class SlackAPI {
             print("Searching for \"\(text)\" of user \(userId ?? "<any>") in channel \(channelId)...")
         }
         repeat {
-            let response = try await conversationsHistory(channelId: channelId, cursor: cursor)
+            let response = try await conversationsHistory(
+                channelId: channelId,
+                after: date,
+                cursor: cursor
+            )
             message = response.messages.first(where: { message in
                 if let userId {
                     guard userId == message.user else {
@@ -141,10 +150,17 @@ public class SlackAPI {
         )
     }
 
-    public func conversationsHistory(channelId: String, cursor: String? = nil) async throws -> ConversationHistoryResponse {
+    public func conversationsHistory(
+        channelId: String,
+        after date: Date? = nil,
+        cursor: String? = nil
+    ) async throws -> ConversationHistoryResponse {
         var parameters = ["channel": channelId]
         if let cursor {
             parameters["cursor"] = cursor
+        }
+        if let date {
+            parameters["oldest"] = String(format: "%.2f", date.timeIntervalSince1970)
         }
 
         return try await client.request(

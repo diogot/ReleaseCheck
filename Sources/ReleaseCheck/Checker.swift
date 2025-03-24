@@ -34,7 +34,12 @@ class Checker {
     func publishRelease(of appId: String, on platform: Platform) async throws {
         print("Publishing release for \(appId) on \(platform)...")
         let release = try await tunes.fetchCurrentRelease(appId: appId, platform: platform)
-        let existentMessage = try await slack.searchMessage(with: release.messageId, inChannel: channelId, fromUser: userId)
+        let existentMessage = try await slack.searchMessage(
+            with: release.messageId,
+            inChannel: channelId,
+            fromUser: userId,
+            after: release.date
+        )
 
         guard existentMessage == nil else {
             print("Release already posted for \(appId) on \(platform)")
