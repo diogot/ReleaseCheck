@@ -70,8 +70,8 @@ class Checker {
         }
         
         let userInfo = try await slack.whoAmI()
-        self._userId = userInfo.user
-        return userInfo.user
+        self._userId = userInfo.userId
+        return userInfo.userId
     }
 
     private func channelId() async throws -> String {
